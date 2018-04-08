@@ -5,6 +5,7 @@ class TodoItemsController < ApplicationController
   # GET /todo_items.json
   def index
     @todo_items = TodoItem.all
+    @n_completed_todo_items = @todo_items.all.where(completed: true).count()
   end
 
   # GET /todo_items/1
@@ -28,7 +29,7 @@ class TodoItemsController < ApplicationController
 
     respond_to do |format|
       if @todo_item.save
-        format.html { redirect_to @todo_item, notice: 'Todo item was successfully created.' }
+        format.html { redirect_to todo_items_url, notice: 'Todo item was successfully created.' }
         format.json { render :show, status: :created, location: @todo_item }
       else
         format.html { render :new }
@@ -69,6 +70,6 @@ class TodoItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def todo_item_params
-      params.fetch(:todo_item, {})
+      params.require(:todo_item).permit(:due_date, :title, :description, :completed)
     end
 end
